@@ -7,9 +7,44 @@ import Header from '../components/Header'
 import Hero from '../components/Hero'
 import Projects from '../components/Projects'
 import Skills from '../components/Skills'
-
+//wagmi
+import { useAccount, useConnect } from 'wagmi'
+import { InjectedConnector } from 'wagmi/connectors/injected'
+import { useContract } from 'wagmi'
+ 
+//Abi
+import ABI from "../contracts/BuyGrocery"
 
 export default function Home() {
+  const contract_address = '0x803B6840E5981950dB4e2bb8bEe7c4A191dE2Ecc';
+
+  const { address, connector, isConnected } = useAccount();  
+  const { connect } = useConnect({
+    connector: new InjectedConnector(),
+  });
+  console.log(connect)
+  if(isConnected){
+    console.log(address);
+  }
+
+  // Gets details about the contract.
+  const contract = useContract({
+    address: contract_address,
+    abi: ABI.abi,
+  })
+  console.log(contract);
+  
+  const addGrocery = async(grocery) => {
+    try{
+      
+    }
+    catch(error){
+      console.log(error);
+    }
+  }
+
+  
+
   return (
     <div className='bg-[rgb(36,36,36)] text-white snap-y snap-mandatory overflow-y-scroll overflow-x-hidden z-0 h-screen'>
       <Head>

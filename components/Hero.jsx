@@ -5,11 +5,15 @@ import { Cursor, useTypewriter } from "react-simple-typewriter";
 import BackgroundCircles from "./BackgroundCircles";
 
 function Hero() {
+  const words = ["Loves magic", "Socializer", "Optimizer"];
   const [text, count] = useTypewriter({
-    words: ["Developer", "Designer", "Creator"],
+    words: words,
     loop: true,
     delaySpeed: 2000,
   });
+
+  
+
   return (
     <div className="h-screen items-center relative flex flex-col justify-center space-y-8 text-center">
       <BackgroundCircles />

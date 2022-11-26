@@ -1,51 +1,13 @@
 import React from "react";
 import { SocialIcon } from "react-social-icons";
 import { motion } from "framer-motion";
-// import { CoinbaseWalletConnector } from "wagmi/connectors/coinbaseWallet";
-import { InjectedConnector } from "wagmi/connectors/injected";
-import { MetaMaskConnector } from "wagmi/connectors/metaMask";
-import { WalletConnectConnector } from "wagmi/connectors/walletConnect";
-import { alchemyProvider } from 'wagmi/providers/alchemy'
-import { createClient, configureChains, defaultChains, useAccount, chain } from 'wagmi'
-import { publicProvider } from 'wagmi/providers/public'
+import { ConnectButton } from '@rainbow-me/rainbowkit';
+import ABI from "../contracts/BuyGrocery"
 
 function Header() { 
-  const { chains, provider, webSocketProvider } = configureChains([chain.mainnet, chain.polygonMumbai, chain.goerli], [
-    alchemyProvider({ apiKey: process.env.ALCHEMY_APIKEY }),
-    publicProvider(),
-  ]);
-  const account = useAccount({
-    onConnect({ address, connector, isReconnected }) {
-      console.log('Connected', { address, connector, isReconnected })
-    },
-    onDisconnect() {
-      console.log('Disconnected')
-    },
-  })
-  const client = createClient({
-    autoConnect: true,
-    connectors: [
-      new MetaMaskConnector({ chains }),
-      new WalletConnectConnector({
-        chains,
-        options: {
-          qrcode: true,
-        },
-      }),
-      new InjectedConnector({
-        chains,
-        options: {
-          name: "Injected",
-          shimDisconnect: true,
-        },
-      }),
-    ],
-    provider,
-    webSocketProvider,
-  });
   
   return (
-    <header className="sticky mx-auto top-0 flex items-start justify-between max-w-7xl z-20 p-5 xl:items-center">
+    <header className="sticky mx-auto top-0 flex items-center justify-center md:items-start md:justify-between max-w-7xl z-20 p-5 xl:items-center md:flex-row flex-col">
       <motion.div
       initial = {{
         x: -500,
@@ -106,7 +68,7 @@ function Header() {
         duration: 1.5
       }}
       className="flex flex-row items-center text-gray-400 cursor-pointer">
-                
+          <ConnectButton className="hover:opacity-0" />
       </motion.div>
     </header>
   );
