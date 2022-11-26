@@ -8,10 +8,10 @@ import { publicProvider } from "wagmi/providers/public";
 //Configure
 const { chains, provider } = configureChains(
   [chain.mainnet, chain.polygon, chain.polygonMumbai, chain.goerli],
-  [alchemyProvider({ apiKey: process.env.ALCHEMY_ID }), publicProvider()]
+  [alchemyProvider({ apiKey: process.env.ALCHEMY_APIKEY }), publicProvider()]
 );
 const { connectors } = getDefaultWallets({
-  appName: "My RainbowKit App",
+  appName: "myportfolio",
   chains,
 });
 const client = createClient({
