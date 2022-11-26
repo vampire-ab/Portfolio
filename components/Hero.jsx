@@ -9,8 +9,6 @@ import CoffeeIcon from '@mui/icons-material/Coffee';
 import SavingsIcon from '@mui/icons-material/Savings';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import ABI from "../contracts/BuyGrocery"
-//React Pop-up
-import Popup from 'reactjs-popup';
 //wagmi
 import { useContract } from "wagmi";
 
@@ -21,23 +19,19 @@ function Hero() {
   const [name, setName] = useState("");
   const [msg, setMsg] = useState("");
   const [amount, setAmount] = useState();
+  const [popUp, setPopUp] = useState(false);
   const contract = useContract({
     address: contract_address,
     abi: ABI.abi,
   });
-  const tip = async() => {
-    const tipTxn = await contract.buyCoffee(
+  const buyGrocery = async () => {
+    const groceryTxn = await contract.buyGrocery(
       name ? name : "Anonymous",
       msg ? msg : "Hey, have fun",
-      {value: ethers.utils.parseEther(amount)}
+      { value: ethers.utils.parseEther(amount) }
     );
-  }
-  const grocery = async() => {
-    const groceryTxn = await contract.buyCoffee(
-      name ? name : "Anonymous",
-      msg ? msg : "Hey, have fun",
-      {value: ethers.utils.parseEther(amount)}
-    );
+    await groceryTxn.wait();
+
   }
   const words = ["Loves magic", "Socializer", "Optimizer"];
   const words2 = ["Buy Me A Coffee", "Support Me"];
@@ -54,9 +48,10 @@ function Hero() {
       setMemos(contract.getMemos());
   }, [])
   useEffect(() => {
-  }, [isTipper])
+  }, [isTipper, popUp])
   return (
-    <div className="h-screen items-center relative flex flex-col justify-center space-y-8 text-center">
+    <div className="h-screen items-center relative flex flex-col justify-center space-y-8 text-center"
+    >
       <BackgroundCircles />
 
       <img
@@ -64,18 +59,30 @@ function Hero() {
         src="/images/myImage.jpg"
         alt="My Image"
       />
+
       {isTipper ?
         <div
           className="z-10">
-          <div className="h-32 max-w-screen-lg overflow-scroll scrollbar-hide">
-            {memos != null && memos.map((memo) => {
-              <div className="grid grid-cols-3 border-[#F7AB0A] rounded-lg">
-                <p className="p-2">{memos.name}</p>
-                <p className="p-2">{memos.message}</p>
-                <p className="p-2">{memos.item}</p>
-              </div>
-            })}
-          </div>
+          {popUp ?
+            <form className="flex flex-col mx-auto w-fit z-[101] gap-2 mb-5 bg-transparent"> 
+            <div className="flex">
+              <p className="text-gray-400 text-lg border rounded-md mx-auto p-1 w-fit border-[#F7AB0A]">Enter details </p>
+              <span className="text-gray-400 hover:font-bold cursor-pointer" onClick = {() => setPopUp(false)}>X</span>
+              </div>             
+              <input id="name" className="detailsInput" type="text" placeholder="Name"></input>
+              <input id="message" className="detailsInput" type="text" placeholder="Message"></input>
+              <input id="value" className="detailsInput" type="number" placeholder="Amount in Wei"></input>
+            </form> :
+            <div className="h-32 max-w-screen-lg overflow-scroll scrollbar-hide">
+              {memos != null && memos.map((memo) => {
+                <div className="grid grid-cols-3 border-[#F7AB0A] rounded-lg">
+                  <p className="p-2">{memos.name}</p>
+                  <p className="p-2">{memos.message}</p>
+                  <p className="p-2">{memos.item}</p>
+                </div>
+              })}
+            </div>
+          }
 
           <div className="z-10">
             <div className="text-sm uppercase text-gray-400 pb-5">
@@ -85,21 +92,20 @@ function Hero() {
               <span className="mr-3">{text}</span>
               <Cursor cursorColor="#F7AB0A" />
             </h1>
-            <div className="pt-10">            
+            <div className="pt-8">
               <button className="heroButton border-0">
-                <CoffeeIcon 
-                onClick = {grocery}
-                className="text-[#F7AB0A] animate-bounce" />
+                <CoffeeIcon
+                  onClick={() => setPopUp(true)}
+                  className="text-[#F7AB0A] animate-bounce" />
               </button>
               <button className="heroButton border-0" onClick={() => setIsTipper(false)}>
                 <ArrowBackIcon className="text-[#F7AB0A] animate-pulse md:mt-3" />
               </button>
               <button className="heroButton border-0">
-                <SavingsIcon 
-                onClick = {tip}
-                className="text-[#F7AB0A] animate-bounce" />
+                <SavingsIcon
+                  onClick={() => setPopUp(true)}
+                  className="text-[#F7AB0A] animate-bounce" />
               </button>
-
             </div>
           </div>
         </div>
